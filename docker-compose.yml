@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  # 既存の Next.js
+  nextjs:
+    build:
+      context: ./next
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./next:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+  # 追加：Strapi（Nodeはコンテナ内で固定。Nextとは別でOK）
+  strapi:
+    image: strapi/strapi:latest
+    # ※ Strapi は現時点では Node 20 系の公式イメージが安定です
+    ports:
+      - "1337:1337"
+    env_file:
+      - ./strapi/.env
+    volumes:
+      - strapi-app:/srv/app
+    # Supabaseは外部接続なので depends_on は不要
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+volumes:
+  strapi-app:

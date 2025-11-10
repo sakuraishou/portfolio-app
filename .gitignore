@@ -35,6 +35,8 @@ next-env.d.ts
 .env
 .vercel
 
+.node_modules
+
 
 .DS_Store
 *.pem
