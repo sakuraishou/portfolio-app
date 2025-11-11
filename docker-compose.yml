@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. Strapi (バックエンド)
+  strapi:
+    build: ./strapi-app # ./strapi-app/Dockerfile を使う
+    container_name: strapi_backend
+    volumes:
+      - ./strapi-app:/app # ローカルのコードをコンテナに同期
+      - /app/node_modules # コンテナ内のnode_modulesを上書きさせない
+    ports:
+      - "1337:1337" # Strapi API (e.g. localhost:1337)
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${SUPABASE_DB_HOST} # サービス名 'db' を指定
+      DATABASE_PORT: 5432
+      DATABASE_NAME: postgres
+      DATABASE_USERNAME: ${SUPABASE_DB_USER}
+      DATABASE_PASSWORD: ${SUPABASE_DB_PASSWORD}
+      DATABASE_SSL: 'false'
+      JWT_SECRET: ${STRAPI_JWT_SECRET}       # ローカル用のJWT秘密鍵
+      ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET} # ローカル用のAdmin秘密鍵
+      NODE_ENV: development
+    restart: unless-stopped
+
+  # 2. Next.js (フロントエンド)
+  nextjs:
+    build: ./next-app # ./next-app/Dockerfile を使う
+    container_name: nextjs_frontend
+    volumes:
+      - ./next-app:/app # ローカルのコードをコンテナに同期
+      - /app/node_modules # コンテナ内のnode_modulesを上書きさせない
+    ports:
+      - "3000:3000" # Next.jsアプリ (e.g. localhost:3000)
+    depends_on:
+      - strapi # strapiサービスが起動してからnextjsを起動
+    environment:
+      # Next.js (クライアントサイド) からStrapi APIを叩くURL
+      NEXT_PUBLIC_STRAPI_API_URL: http://localhost:1337
+      # Next.js (サーバーサイド, e.g. GSSP) からStrapi APIを叩くURL
+      STRAPI_API_URL: http://strapi:1337 # コンテナ間通信
+    restart: unless-stopped
+
+volumes: {}
