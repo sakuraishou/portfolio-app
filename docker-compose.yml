@@ -20,6 +20,10 @@ services:
       DATABASE_SSL: 'false'
       JWT_SECRET: ${STRAPI_JWT_SECRET}       # ローカル用のJWT秘密鍵
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET} # ローカル用のAdmin秘密鍵
+
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+
       NODE_ENV: development
     restart: unless-stopped
 
