@@ -1,0 +1,6 @@
+// normalize.css の代わりに destyle.css をインポート
+@import "destyle.css";
+
+// 2. サイト全体で使うSass変数を定義 (例)
+$primary-color: #41b883;
+// ... (以下は同じ) ...

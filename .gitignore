@@ -11,8 +11,8 @@ yarn-error.log*
 
 # --- universal (any depth) ---
 **/node_modules/
-**/.next/
-**/out/
+**/.nuxt/
+**/.output/
 **/dist/
 **/build/
 **/.turbo/
@@ -24,15 +24,14 @@ yarn-error.log*
 .env.*
 !.env.example
 
-# Next.js
-**/next-env.d.ts
+# Nuxt.js
+**/nuxt.d.ts
 
-# Strapi
+# Strapi (変更なし)
 /strapi/.cache
 /strapi/build
 /strapi/public/uploads
 
-# docker
+# docker (変更なし)
 /pgdata
 /docker-compose.override.yml
-

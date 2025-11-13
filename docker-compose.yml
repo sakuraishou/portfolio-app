@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # 1. Strapi (バックエンド)
@@ -8,6 +8,8 @@ services:
     volumes:
       - ./strapi-app:/app # ローカルのコードをコンテナに同期
       - /app/node_modules # コンテナ内のnode_modulesを上書きさせない
+      - /app/build
+      - /app/.cache
     ports:
       - "1337:1337" # Strapi API (e.g. localhost:1337)
     environment:
@@ -17,8 +19,8 @@ services:
       DATABASE_NAME: postgres
       DATABASE_USERNAME: ${SUPABASE_DB_USER}
       DATABASE_PASSWORD: ${SUPABASE_DB_PASSWORD}
-      DATABASE_SSL: 'false'
-      JWT_SECRET: ${STRAPI_JWT_SECRET}       # ローカル用のJWT秘密鍵
+      DATABASE_SSL: "false"
+      JWT_SECRET: ${STRAPI_JWT_SECRET} # ローカル用のJWT秘密鍵
       ADMIN_JWT_SECRET: ${STRAPI_ADMIN_JWT_SECRET} # ローカル用のAdmin秘密鍵
 
       APP_KEYS: ${APP_KEYS}
@@ -27,22 +29,26 @@ services:
       NODE_ENV: development
     restart: unless-stopped
 
-  # 2. Next.js (フロントエンド)
-  nextjs:
-    build: ./next-app # ./next-app/Dockerfile を使う
-    container_name: nextjs_frontend
+  # 2. Nuxt.js (フロントエンド)
+  nuxtjs:
+    build: ./nuxt-app # ★ビルド対象を nuxt-app に変更
+    container_name: nuxtjs_frontend
     volumes:
-      - ./next-app:/app # ローカルのコードをコンテナに同期
-      - /app/node_modules # コンテナ内のnode_modulesを上書きさせない
+      - ./nuxt-app:/app
+      - /app/node_modules
+      - /app/.nuxt
     ports:
-      - "3000:3000" # Next.jsアプリ (e.g. localhost:3000)
+      - "3000:3000"
     depends_on:
-      - strapi # strapiサービスが起動してからnextjsを起動
+      - strapi
     environment:
-      # Next.js (クライアントサイド) からStrapi APIを叩くURL
-      NEXT_PUBLIC_STRAPI_API_URL: http://localhost:1337
-      # Next.js (サーバーサイド, e.g. GSSP) からStrapi APIを叩くURL
-      STRAPI_API_URL: http://strapi:1337 # コンテナ間通信
+      # ★Nuxt.js用の環境変数名に変更
+      # Nuxt (クライアントサイド) からStrapi APIを叩くURL
+      NUXT_PUBLIC_STRAPI_API_URL: http://localhost:1337
+      # Nuxt (サーバーサイド) からStrapi APIを叩くURL
+      NUXT_STRAPI_API_URL: http://strapi:1337
+
+      NODE_ENV: development
     restart: unless-stopped
 
 volumes: {}
