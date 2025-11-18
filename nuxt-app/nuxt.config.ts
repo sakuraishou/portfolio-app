@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import { resolve } from "path";
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
@@ -15,9 +16,37 @@ export default defineNuxtConfig({
     },
   },
 
-  // ★ この css ブロックが必須です
-  css: [
-    "~/assets/scss/main.scss",
-    // ↑ この一行が、Nuxtに「サイト全体で main.scss を読み込め」と指示しています
-  ],
+  alias: {
+    "@": resolve(__dirname, "./"),
+    "~": resolve(__dirname, "./"),
+  },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `
+            @use "/assets/scss/config.scss" as *;
+            @use "/assets/scss/mixin.scss" as *;
+          `,
+        },
+      },
+    },
+  },
+
+  app: {
+    head: {
+      link: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossorigin: "",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap",
+        },
+      ],
+    },
+  },
 });

@@ -1,0 +1,12 @@
+@mixin sp {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+// 中央寄せ
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

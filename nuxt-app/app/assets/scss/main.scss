@@ -1,0 +1,60 @@
+@use "config" as *;
+@use "mixin" as *;
+
+@import "destyle.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+  height: -webkit-fill-available;
+}
+
+body {
+  font-family: $font-base;
+  font-size: 1.6rem;
+  font-feature-settings: "palt" 1;
+  font-weight: 500;
+  line-height: 1.5;
+  color: $fontColor;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-feature-settings: "palt" 1;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  vertical-align: bottom;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+dt {
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+picture {
+  display: block;
+}
+
+*:focus {
+  outline: none;
+}
